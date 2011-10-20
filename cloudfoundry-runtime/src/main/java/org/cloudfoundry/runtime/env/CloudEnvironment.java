@@ -55,6 +55,23 @@ public class CloudEnvironment {
 		} 
 	}
 	
+	@SuppressWarnings("unchecked")
+	public AppDependencyInfo getAppDependencyInfo() {
+		String dependencyInfoString = getValue("VCAP_CUSTOM_SERVICES");
+		if (dependencyInfoString == null || dependencyInfoString.trim().isEmpty()) {
+			return null;
+		}
+		try {
+			Map<String,Object> infoMap = objectMapper.readValue(dependencyInfoString, Map.class);
+			return new AppDependencyInfo(infoMap);
+		} catch (Exception e) {
+			throw new RuntimeException(e);
+		} 
+	}
+	
+	
+	
+	
 	public String getCloudApiUri() {
 		ApplicationInstanceInfo instanceInfo = getInstanceInfo();
 		if (instanceInfo == null) {
